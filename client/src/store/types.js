@@ -1,0 +1,5 @@
+export const ADD_POST = "ADD_POST"
+export const REMOVE_POST = "REMOVE_POST"
+export const ADD_MANY_POSTS = "ADD_MANY_POSTS"
+export const ADD_ERROR = "ADD_ERROR"
+export const REMOVE_ERROR = "REMOVE_ERROR"
