@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deletePost, getPostsFromServer } from "./actionsAsync/getPosts";
 import { addPostAction } from "./store/reducers/postReducer";
-import {removeErrorsAction} from "./store/reducers/errorReducer";
+import { removeErrorsAction } from "./store/reducers/errorReducer";
 
 const customStyles = {
   content: {
@@ -33,9 +33,8 @@ export const App = () => {
           body: postBody,
           id: posts.length + 1
         })
-
-      // const data = await response.json()
-      // dispatch(addPostAction(data))
+      const data = await response.json()
+      data.length && dispatch(addPostAction(data))
 
     dispatch(addPostAction({title: postTitle, body: postBody, id: posts.length + 1}))
     setPostTitle('')
