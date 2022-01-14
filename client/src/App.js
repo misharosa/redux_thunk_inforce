@@ -34,8 +34,8 @@ export const App = () => {
           id: posts.length + 1
         })
 
-      const data = await response.json()
-      dispatch(addPostAction(data))
+      // const data = await response.json()
+      // dispatch(addPostAction(data))
 
     dispatch(addPostAction({title: postTitle, body: postBody, id: posts.length + 1}))
     setPostTitle('')
@@ -46,7 +46,7 @@ export const App = () => {
   const deleteAllErrors = () => {
       dispatch(removeErrorsAction(errors))
   }
-    console.log(errors)
+
   return (
     <div className="App">
         <button onClick={() => setIsOpen(true)}>Add post</button>
@@ -57,7 +57,7 @@ export const App = () => {
         </ul>
       {posts.length !== 0
       && posts.map((post,index) =>
-            <ul key={post.id}>
+            <ul key={index}>
               <li> <b>Title:</b> {post.title}</li>
               <li> <b>Comment:</b> {post.body}</li>
               <button type="button" onClick={deletePost(post.id)}>delete</button>
@@ -67,6 +67,7 @@ export const App = () => {
         <Modal
             isOpen={modalIsOpen}
             style={customStyles}
+            ariaHideApp={false}
         >
           <form onSubmit={(e) => {
             e.preventDefault()

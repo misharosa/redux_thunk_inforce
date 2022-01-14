@@ -4,7 +4,7 @@ import { catchErrorAction } from "../store/reducers/errorReducer";
 export const getPostsFromServer = () => {
     return async (dispatch) => {
         try {
-            const response = await fetch('h://jsonplaceholder.typicode.com/posts')
+            const response = await fetch('https://jsonplaceholder.typicode.com/posts')
             const data = await response.json()
 
             dispatch(addManyPostsAction(data))
