@@ -5,3 +5,19 @@
 li {
   list-style: none;
 }
+
+label {
+  display: block;
+}
+
+h4 {
+  margin: 20px 0 0 0;
+}
+
+input {
+  display: block;
+  height: 10px;
+  width: 300px;
+  margin: 0 auto;
+  padding: 10px;
+}

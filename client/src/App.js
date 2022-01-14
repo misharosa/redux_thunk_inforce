@@ -1,9 +1,9 @@
 import './App.css';
 import Modal from 'react-modal';
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deletePost, getPostsFromServer } from "./actionsAsync/getPosts";
-import { addPostAction } from "./store/reducers/postReducer";
+import {addPostAction, deleteAllPosts} from "./store/reducers/postReducer";
 import { removeErrorsAction } from "./store/reducers/errorReducer";
 
 const customStyles = {
@@ -21,10 +21,12 @@ export const App = () => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [postTitle, setPostTitle] = useState('');
   const [postBody, setPostBody] = useState('');
+  const [filterValue, setFilterValue] = useState('')
 
   const dispatch = useDispatch()
   const posts = useSelector(state => state.posts.posts)
   const errors = useSelector(state => state.errors.errors)
+
 
   const addPost = async () => {
    const response = await fetch('https://jsonplaceholder.typicode.com/posts', {
@@ -42,6 +44,13 @@ export const App = () => {
     setIsOpen(false)
   }
 
+  const handleFilterPosts = useMemo(() => {
+        return posts.filter(post =>(
+            post.title.toLowerCase().includes(filterValue.toLowerCase()) ||
+        post.body.toLowerCase().includes(filterValue.toLowerCase())
+        ))
+    }, [posts, filterValue])
+
   const deleteAllErrors = () => {
       dispatch(removeErrorsAction(errors))
   }
@@ -50,19 +59,33 @@ export const App = () => {
     <div className="App">
         <button onClick={() => setIsOpen(true)}>Add post</button>
         <button onClick={() => dispatch(getPostsFromServer())}>Open post from server</button>
+        <button onClick={() => dispatch(deleteAllPosts())}>delete all posts</button>
         <button onClick={() => deleteAllErrors()}>Remove all errors</button>
+        <label htmlFor="filterPosts">
+            <h4>Find post by title or comment:</h4>
+            <input
+                value={filterValue}
+                onChange={(e) => setFilterValue(e.target.value)}
+                id="filterPosts"
+                type="text"
+            />
+        </label>
+        {errors.length !== 0 &&
         <ul>
             {errors.map(error => <li>{error.message}</li>)}
         </ul>
+        }
+      <div>
+      <div>
       {posts.length !== 0
-      && posts.map((post,index) =>
+      && handleFilterPosts.map((post,index) =>
             <ul key={index}>
               <li> <b>Title:</b> {post.title}</li>
               <li> <b>Comment:</b> {post.body}</li>
               <button type="button" onClick={deletePost(post.id)}>delete</button>
             </ul>
       )}
-      <div>
+      </div>
         <Modal
             isOpen={modalIsOpen}
             style={customStyles}
