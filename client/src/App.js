@@ -1,69 +1,93 @@
 import './App.css';
 import Modal from 'react-modal';
-import { useMemo, useState } from "react";
+import {useEffect, useMemo, useState} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deletePost, getPostsFromServer } from "./actionsAsync/getPosts";
-import {addPostAction, deleteAllPosts} from "./store/reducers/postReducer";
 import { removeErrorsAction } from "./store/reducers/errorReducer";
-
-const customStyles = {
-  content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-  },
-};
+import {addPostAction, deleteAllPosts, editPostAction, removePostAction} from "./store/actions/actions";
+import { customStyles } from "./style/styleModal";
+import { v4 as uuidv4 } from 'uuid';
 
 export const App = () => {
-  const [modalIsOpen, setIsOpen] = useState(false);
+  const [addIsOpen, setAddIsOpen] = useState(false);
+  const [editIsOpen, setEditIsOpen] = useState(false)
+
   const [postTitle, setPostTitle] = useState('');
   const [postBody, setPostBody] = useState('');
+
   const [filterValue, setFilterValue] = useState('')
+
+  const [editPost, setEditPost] = useState(null)
+  const [editTitleValue, setEditTitleValue] = useState('')
+  const [editBodyValue, setEditBodyValue] = useState('')
+
+    useEffect(() => {
+        if (editPost) {
+        setEditTitleValue(editPost.title)
+        setEditBodyValue(editPost.body)
+        }
+    }, [editPost])
 
   const dispatch = useDispatch()
   const posts = useSelector(state => state.posts.posts)
   const errors = useSelector(state => state.errors.errors)
 
+  const addPost = async (e) => {
+      e.preventDefault()
 
-  const addPost = async () => {
    const response = await fetch('https://jsonplaceholder.typicode.com/posts', {
           method:"POST",
           title: postTitle,
           body: postBody,
-          id: posts.length + 1
+          id: uuidv4()
         })
       const data = await response.json()
       data.length && dispatch(addPostAction(data))
 
-    dispatch(addPostAction({title: postTitle, body: postBody, id: posts.length + 1}))
+    dispatch(addPostAction({title: postTitle, body: postBody, id: uuidv4()}))
     setPostTitle('')
     setPostBody('')
-    setIsOpen(false)
+    setAddIsOpen(false)
   }
 
   const handleFilterPosts = useMemo(() => {
-        return posts.filter(post =>(
+      console.log('posts', posts)
+      return posts.filter(post => (
             post.title.toLowerCase().includes(filterValue.toLowerCase()) ||
-        post.body.toLowerCase().includes(filterValue.toLowerCase())
+            post.body.toLowerCase().includes(filterValue.toLowerCase())
         ))
-    }, [posts, filterValue])
+    }, [posts, filterValue, editPost])
 
   const deleteAllErrors = () => {
       dispatch(removeErrorsAction(errors))
   }
 
+  const findPostById = (postId) => {
+      setEditPost(posts.find(post => post.id === postId))
+  }
+
+  const editPostById = (postId) => {
+      const postsAfterEdit = posts.map((item,index) => {
+          if (item.id === postId) {
+              return {...item, title: editTitleValue, body: editBodyValue, id: index}
+          }
+
+          return item
+          }
+      )
+          dispatch(editPostAction(postsAfterEdit))
+  }
+
   return (
     <div className="App">
-        <button onClick={() => setIsOpen(true)}>Add post</button>
+        <button onClick={() => setAddIsOpen(true)}>Add post</button>
         <button onClick={() => dispatch(getPostsFromServer())}>Open post from server</button>
         <button onClick={() => dispatch(deleteAllPosts())}>delete all posts</button>
         <button onClick={() => deleteAllErrors()}>Remove all errors</button>
         <label htmlFor="filterPosts">
             <h4>Find post by title or comment:</h4>
             <input
+                placeholder="filter post..."
                 value={filterValue}
                 onChange={(e) => setFilterValue(e.target.value)}
                 id="filterPosts"
@@ -80,21 +104,32 @@ export const App = () => {
       {posts.length !== 0
       && handleFilterPosts.map((post,index) =>
             <ul key={index}>
-              <li> <b>Title:</b> {post.title}</li>
-              <li> <b>Comment:</b> {post.body}</li>
-              <button type="button" onClick={deletePost(post.id)}>delete</button>
+              <li> <b>Title: </b>   {post.title}</li>
+              <li> <b>Comment: </b> {post.body}</li>
+              <button
+                  type="button"
+                  onClick={() => {
+                  deletePost(post.id)
+                  dispatch(removePostAction(post.id))
+              }}>
+                  delete
+              </button>
+                <button onClick={() => {
+                    setEditIsOpen(true)
+                    findPostById(post.id)
+                }}
+                >
+                    edit
+                </button>
             </ul>
       )}
       </div>
         <Modal
-            isOpen={modalIsOpen}
+            isOpen={addIsOpen}
             style={customStyles}
             ariaHideApp={false}
         >
-          <form onSubmit={(e) => {
-            e.preventDefault()
-            addPost()
-          }}>
+          <form onSubmit={(e) => addPost(e)}>
             <h1>We can to add post!</h1>
               <label style={{display:'block'}}>
               Title:
@@ -113,13 +148,48 @@ export const App = () => {
                 />
               <button type="submit" style={{display: 'block'}}>Send</button>
               <button
+                  type="button"
                   style={{display: 'block', marginTop: '10px'}}
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => setAddIsOpen(false)}
               >
                 Close
               </button>
           </form>
         </Modal>
+          {editPost &&
+            <Modal
+              isOpen={editIsOpen}
+              style={customStyles}
+              ariaHideApp={false}
+          >
+              <form style={{padding: '10px'}}>
+                  <h2 style={{margin: '3px'}}>You can to edit this post!</h2>
+                  <label style={{display:'block'}}>
+                      Title:
+                      <input
+                          value={editTitleValue}
+                          onChange={(e) => setEditTitleValue(e.target.value)}
+                      />
+                  </label>
+                  <label style={{display:'block', border: 'white', marginTop: '10px'}}>
+                      Comment:
+                      <input
+                          value={editBodyValue}
+                          onChange={(e) => setEditBodyValue(e.target.value)}
+                      />
+                  </label >
+                  <div className="buttons-edit">
+                      <button type="button" onClick={() => {
+                        setEditIsOpen(false)
+                          editPostById(editPost.id)
+                      }}>
+                          edit
+                      </button>
+                      <button type="button" onClick={() => setEditIsOpen(false)}>close</button>
+                  </div>
+              </form>
+          </Modal>
+          }
       </div>
     </div>
   );

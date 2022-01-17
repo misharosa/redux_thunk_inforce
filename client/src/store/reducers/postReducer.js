@@ -1,35 +1,27 @@
-import {ADD_MANY_POSTS, ADD_POST, DELETE_ALL_POST, REMOVE_POST} from "../types";
+import {ADD_MANY_POSTS, ADD_POST, DELETE_ALL_POST, EDIT_POST, REMOVE_POST} from "../type/types";
 
-const defaultState = {
+const initialState = {
     posts: [],
 }
 
-export const postsReducer = (state = defaultState, action) => {
+export const postsReducer = (state = initialState, action) => {
     switch(action.type) {
         case ADD_MANY_POSTS:
-            return {...state, posts: [...state.posts, ...action.payload]}
+            return { ...state, posts: [...state.posts, ...action.payload]}
 
         case ADD_POST:
-            return {...state, posts: [...state.posts,
-                     {
-                         title: action.payload.title,
-                         body: action.payload.body,
-                         id: action.payload.id
-                     }
-                ]}
+            return { ...state, posts: [...state.posts, action.payload] }
 
         case REMOVE_POST:
-            return {...state, posts: action.payload}
+            return { ...state, posts: state.posts.filter(post => post.id !== action.payload) }
 
         case DELETE_ALL_POST:
-            return {...state, posts: []}
+            return { ...state, posts: [] }
+
+        case EDIT_POST:
+            return { ...state, posts: action.payload }
 
         default:
             return state;
     }
 }
-
-export const deleteAllPosts = (payload) => ({type: DELETE_ALL_POST, payload})
-export const addPostAction = (payload) => ({type: ADD_POST, payload})
-export const removePostAction = (payload) => ({type: REMOVE_POST, payload})
-export const addManyPostsAction = (payload) => ({type: ADD_MANY_POSTS, payload})

@@ -1,5 +1,5 @@
-import { addManyPostsAction, removePostAction } from "../store/reducers/postReducer";
 import { catchErrorAction } from "../store/reducers/errorReducer";
+import { addManyPostsAction, removePostAction } from "../store/actions/actions";
 
 export const getPostsFromServer = () => {
     return async (dispatch) => {
@@ -21,9 +21,9 @@ export const deletePost = (postId) => {
             method: "DELETE"
         })
         const data = await response.json()
-        dispatch(removePostAction(data))
+        console.log(data)
     } catch (e) {
-        dispatch(catchErrorAction())
+        dispatch(catchErrorAction(e))
       }
    }
 }

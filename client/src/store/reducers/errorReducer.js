@@ -1,4 +1,4 @@
-import { ADD_ERROR, REMOVE_ERROR } from "../types";
+import { ADD_ERROR, REMOVE_ERROR } from "../type/types";
 
 const defaultState = {
     errors: []
