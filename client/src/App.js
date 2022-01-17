@@ -112,7 +112,7 @@ export const App = () => {
                   deletePost(post.id)
                   dispatch(removePostAction(post.id))
               }}>
-                  delete
+                  delete 23
               </button>
                 <button onClick={() => {
                     setEditIsOpen(true)
