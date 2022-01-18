@@ -7,6 +7,7 @@ import { deletePost, getPostsFromServer } from "./actionsAsync/dataFromServer";
 import { removeErrorsAction } from "./store/reducers/errorReducer";
 import { addPostAction, deleteAllPostsAction, editPostAction, removePostAction } from "./store/actions/actions";
 import './App.css';
+import {PostList} from "./componenets/PostList/PostList";
 
 export const App = () => {
   const [addIsOpen, setAddIsOpen] = useState(false);
@@ -21,12 +22,12 @@ export const App = () => {
   const [editTitleValue, setEditTitleValue] = useState('')
   const [editBodyValue, setEditBodyValue] = useState('')
 
-    useEffect(() => {
+  useEffect(() => {
         if (editPost) {
         setEditTitleValue(editPost.title)
         setEditBodyValue(editPost.body)
         }
-    }, [editPost])
+  }, [editPost])
 
   const dispatch = useDispatch()
   const posts = useSelector(state => state.posts.posts)
@@ -35,23 +36,22 @@ export const App = () => {
   const addPost = async (e) => {
       e.preventDefault()
 
-   const response = await fetch('https://jsonplaceholder.typicode.com/posts', {
-          method:"POST",
-          title: postTitle,
-          body: postBody,
-          id: uuidv4()
-        })
+      const response = await fetch('https://jsonplaceholder.typicode.com/posts', {
+              method:"POST",
+              title: postTitle,
+              body: postBody,
+              id: uuidv4()
+            })
       const data = await response.json()
       data.length && dispatch(addPostAction(data))
 
-    dispatch(addPostAction({title: postTitle, body: postBody, id: uuidv4()}))
-    setPostTitle('')
-    setPostBody('')
-    setAddIsOpen(false)
+        dispatch(addPostAction({title: postTitle, body: postBody, id: uuidv4()}))
+        setPostTitle('')
+        setPostBody('')
+        setAddIsOpen(false)
   }
 
   const handleFilterPosts = useMemo(() => {
-      console.log('posts', posts)
       return posts.filter(post => (
             post.title.toLowerCase().includes(filterValue.toLowerCase()) ||
             post.body.toLowerCase().includes(filterValue.toLowerCase())
@@ -100,30 +100,11 @@ export const App = () => {
         </ul>
         }
       <div>
-      <div>
-      {posts.length !== 0
-      && handleFilterPosts.map((post,index) =>
-            <ul key={index}>
-              <li> <b>Title: </b>   {post.title}</li>
-              <li> <b>Comment: </b> {post.body}</li>
-              <button
-                  type="button"
-                  onClick={() => {
-                  deletePost(post.id)
-                  dispatch(removePostAction(post.id))
-              }}>
-                  delete
-              </button>
-                <button onClick={() => {
-                    setEditIsOpen(true)
-                    findPostById(post.id)
-                }}
-                >
-                    edit
-                </button>
-            </ul>
-      )}
-      </div>
+      <PostList
+          posts={handleFilterPosts}
+          findPostById={findPostById}
+          setEditIsOpen={setEditIsOpen}
+      />
         <Modal
             isOpen={addIsOpen}
             style={customStyles}
@@ -179,13 +160,13 @@ export const App = () => {
                       />
                   </label >
                   <div className="buttons-edit">
-                      <button type="button" onClick={() => {
+                      <button className="btn btn-secondary" type="button" onClick={() => {
                         setEditIsOpen(false)
                           editPostById(editPost.id)
                       }}>
                           edit
                       </button>
-                      <button type="button" onClick={() => setEditIsOpen(false)}>close</button>
+                      <button className="btn btn-warning" type="button" onClick={() => setEditIsOpen(false)}>close</button>
                   </div>
               </form>
           </Modal>

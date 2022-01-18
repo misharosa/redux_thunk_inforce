@@ -14,7 +14,7 @@ export const postsReducer = (state = initialState, action: ActionType) : Initial
             return { ...state, posts: [...state.posts, action.payload] }
 
         case actionTypes.REMOVE_POST:
-            return { ...state, posts: state.posts.filter((post:Posts) => post.id !== action.payload) }
+            return { ...state, posts: state.posts.filter((post: Posts) => post.id !== action.payload) }
 
         case actionTypes.DELETE_ALL_POST:
             return { ...state, posts: [] }

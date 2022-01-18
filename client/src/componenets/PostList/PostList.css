@@ -1,0 +1,39 @@
+.post-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.post {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #ffffff;
+    font-family: Roboto, sans-serif;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.post__item {
+    font-weight: 400;
+    line-height: 20px;
+}
+
+.post__buttons {
+    display: flex;
+    justify-content: space-around;
+}
+
+.post__button {
+    width: 70px;
+}
+
+.post__number {
+    font-weight: 500;
+    font-size: 11px;
+    position: absolute;
+    left: 20px;
+    bottom: 0px;
+}

@@ -4,6 +4,7 @@ box-sizing: border-box;
 
 .App {
   text-align: center;
+  background-color: #F2F3F4;
 }
 
 li {
@@ -30,4 +31,9 @@ input {
   display: flex;
   justify-content: space-around;
   align-items: center;
+  margin-top: 10px;
+}
+
+.buttons-edit > button {
+  width: 70px;
 }

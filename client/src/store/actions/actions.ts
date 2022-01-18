@@ -8,8 +8,8 @@ export function simulateHttpRequest(action: any) {
     };
 }
 
-export const deleteAllPostsAction = (article: any) => {
-    const action = {type: actionTypes.DELETE_ALL_POST, article}
+export const deleteAllPostsAction = (payload: any) => {
+    const action = { type: actionTypes.DELETE_ALL_POST, payload }
 
     return simulateHttpRequest(action)
 }
@@ -29,7 +29,7 @@ export const removePostAction = (payload: any) => {
 export const addManyPostsAction = (payload: any) => {
    const action = { type: actionTypes.ADD_MANY_POSTS, payload }
 
-    return simulateHttpRequest(action)
+   return simulateHttpRequest(action)
 }
 
 export const editPostAction = (payload: any) => {
