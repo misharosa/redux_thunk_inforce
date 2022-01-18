@@ -1,7 +1,39 @@
-import { ADD_MANY_POSTS, ADD_POST, DELETE_ALL_POST, EDIT_POST, REMOVE_POST } from "../type/types";
+import * as actionTypes from "../type/types";
 
-export const deleteAllPosts = (payload: any) => ({ type: DELETE_ALL_POST, payload })
-export const addPostAction = (payload: any) => ({ type: ADD_POST, payload })
-export const removePostAction = (payload: any) => ({ type: REMOVE_POST, payload })
-export const addManyPostsAction = (payload: any) => ({ type: ADD_MANY_POSTS, payload })
-export const editPostAction = (payload: any) => ({ type: EDIT_POST, payload })
+export function simulateHttpRequest(action: any) {
+    return (dispatch: any) => {
+        setTimeout(() => {
+            dispatch(action);
+        }, 500);
+    };
+}
+
+export const deleteAllPostsAction = (article: any) => {
+    const action = {type: actionTypes.DELETE_ALL_POST, article}
+
+    return simulateHttpRequest(action)
+}
+
+export const addPostAction = (payload: any) => {
+    const action = { type: actionTypes.ADD_POST, payload }
+
+    return simulateHttpRequest(action)
+}
+
+export const removePostAction = (payload: any) => {
+    const action = { type: actionTypes.REMOVE_POST, payload }
+
+    return simulateHttpRequest(action)
+}
+
+export const addManyPostsAction = (payload: any) => {
+   const action = { type: actionTypes.ADD_MANY_POSTS, payload }
+
+    return simulateHttpRequest(action)
+}
+
+export const editPostAction = (payload: any) => {
+  const action = { type: actionTypes.EDIT_POST, payload }
+
+  return simulateHttpRequest(action)
+}

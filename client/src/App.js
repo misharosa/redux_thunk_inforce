@@ -1,12 +1,12 @@
-import './App.css';
 import Modal from 'react-modal';
-import {useEffect, useMemo, useState} from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { deletePost, getPostsFromServer } from "./actionsAsync/getPosts";
-import { removeErrorsAction } from "./store/reducers/errorReducer";
-import {addPostAction, deleteAllPosts, editPostAction, removePostAction} from "./store/actions/actions";
-import { customStyles } from "./style/styleModal";
 import { v4 as uuidv4 } from 'uuid';
+import { customStyles } from "./style/styleModal";
+import { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { deletePost, getPostsFromServer } from "./actionsAsync/dataFromServer";
+import { removeErrorsAction } from "./store/reducers/errorReducer";
+import { addPostAction, deleteAllPostsAction, editPostAction, removePostAction } from "./store/actions/actions";
+import './App.css';
 
 export const App = () => {
   const [addIsOpen, setAddIsOpen] = useState(false);
@@ -82,7 +82,7 @@ export const App = () => {
     <div className="App">
         <button onClick={() => setAddIsOpen(true)}>Add post</button>
         <button onClick={() => dispatch(getPostsFromServer())}>Open post from server</button>
-        <button onClick={() => dispatch(deleteAllPosts())}>delete all posts</button>
+        <button onClick={() => dispatch(deleteAllPostsAction())}>delete all posts</button>
         <button onClick={() => deleteAllErrors()}>Remove all errors</button>
         <label htmlFor="filterPosts">
             <h4>Find post by title or comment:</h4>

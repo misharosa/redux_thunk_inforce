@@ -27,4 +27,3 @@ interface PostFromServer {
 export interface PostsFromServer {
     posts: PostFromServer[];
 }
-
