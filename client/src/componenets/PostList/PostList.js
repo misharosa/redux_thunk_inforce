@@ -1,11 +1,11 @@
 import React from "react";
 import { deletePost } from "../../actionsAsync/dataFromServer";
 import { removePostAction } from "../../store/actions/actions";
-import { store } from "../../store";
 import "./PostList.css"
+import {useDispatch} from "react-redux";
 
 export const PostList = ({ posts, findPostById, setEditIsOpen }) => {
-    const { dispatch } = store
+    const  dispatch  = useDispatch()
     return (
         <div className="post-container">
             {posts.length !== 0

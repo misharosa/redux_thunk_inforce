@@ -30,7 +30,7 @@ export const App = () => {
   }, [editPost])
 
   const dispatch = useDispatch()
-  const posts = useSelector(state => state.posts.posts)
+  const { posts } = useSelector(state => state.posts)
   const errors = useSelector(state => state.errors.errors)
 
   const addPost = async (e) => {
@@ -45,7 +45,7 @@ export const App = () => {
       const data = await response.json()
       data.length && dispatch(addPostAction(data))
 
-        dispatch(addPostAction({title: postTitle, body: postBody, id: uuidv4()}))
+        dispatch(addPostAction({ title: postTitle, body: postBody, id: uuidv4() }))
         setPostTitle('')
         setPostBody('')
         setAddIsOpen(false)
@@ -99,7 +99,6 @@ export const App = () => {
             {errors.map(error => <li>{error.message}</li>)}
         </ul>
         }
-      <div>
       <PostList
           posts={handleFilterPosts}
           findPostById={findPostById}
@@ -122,11 +121,11 @@ export const App = () => {
                 />
               </label >
                 Comment:
-                <textarea
+              <textarea
                   style={{display: 'block'}}
                   value={postBody}
-                  onChange={(e) => setPostBody(e.target.value)}
-                />
+                  onChange={(e ) => setPostBody(e.target.value)}
+              />
               <button type="submit" style={{display: 'block'}}>Send</button>
               <button
                   type="button"
@@ -162,15 +161,23 @@ export const App = () => {
                   <div className="buttons-edit">
                       <button className="btn btn-secondary" type="button" onClick={() => {
                         setEditIsOpen(false)
-                          editPostById(editPost.id)
-                      }}>
+                        editPostById(editPost.id)
+                      }}
+                      >
                           edit
                       </button>
-                      <button className="btn btn-warning" type="button" onClick={() => setEditIsOpen(false)}>close</button>
+                      <button
+                          className="btn btn-warning"
+                          type="button"
+                          onClick={() => setEditIsOpen(false)}
+                      >
+                          close
+                      </button>
                   </div>
               </form>
           </Modal>
           }
+        <div>
       </div>
     </div>
   );
